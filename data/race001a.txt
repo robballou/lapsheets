@@ -1,0 +1,19 @@
+# simple race with all people finishing: 3 laps, winner 101, all race sheets the same
+100
+101
+102
+103
+105
+104
+100
+101
+105
+103
+104
+102
+101
+100
+105
+103
+104
+102
