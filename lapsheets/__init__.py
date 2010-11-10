@@ -1,12 +1,16 @@
 import os
 import re
 import sys
+import Levenshtein
 
 class Racer(object):
     def __init__(self, number, partial=False, unknown=False):
         self.number = number
         self.partial = partial
         self.unknown = unknown
+    
+    def match_reliability(self, number):
+        return Levenshtein.ratio(self.number, number)
 
 class Result(object):
     """
@@ -18,10 +22,28 @@ class Result(object):
     
     def __init__(self):
         self.sources = []
-        self.reliability = 0
+        self.reliability = 0.0
+        self.guess = ''
     
     def __str__(self):
         return "%s (%s)" % (self.best_guess(), self.relability) 
+    
+    def best_guess(self):
+        guess = ''
+        for source in self.sources:
+            if guess == '': 
+                guess = source.number
+                self.reliability += 1.0 / len(self.sources)
+            elif source.number == guess and not source.partial:
+                self.reliability += 1.0 / len(self.sources)
+            elif source.partial:
+                match = source.match_reliability(guess)
+                if match > 0.0: self.reliability += match / len(self.sources)
+        self.guess = guess
+        return guess
+    
+    def certainty(self):
+        return self.reliability
     
     def has_number(self, number):
         for source in self.sources:
