@@ -1,13 +1,13 @@
 import sys
 import os
 
-def find_files(name):
+def find_files(name, directory="data"):
     files = []
-    if os.path.exists("data"):
-        d = os.listdir("data")
+    if os.path.exists(directory):
+        d = os.listdir(directory)
         for entry in d:
-            if entry.startswith(name):
-                files.append("%s/%s" % ("data", entry))
+            if entry.startswith(name) and entry != "%s.txt" % name:
+                files.append("%s/%s" % (directory, entry))
     return files
 
 def merge_files(files):
